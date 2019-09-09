@@ -44,11 +44,25 @@ string find_calc(string s) { // функция расчитывает строк
 		s = calc(s, ind_zn);
 
 	// * /
-	while (int ind_zn = s.find('^') != -1)
+	while (s.find('*') != -1 || s.find('/') != -1) {
+		int ind_zn;
+		if (s.find('*') < s.find('/') && s.find('*') != -1)
+			ind_zn = s.find('*');
+		else
+			ind_zn = s.find('/');
 		s = calc(s, ind_zn);
 
+	}
+	// + -
+	while (s.find('*') != -1 || s.find('/') != -1) {
+		int ind_zn;
+		if (s.find('*') < s.find('/') && s.find('*') != -1)
+			ind_zn = s.find('*');
+		else
+			ind_zn = s.find('/');
+		s = calc(s, ind_zn);
 
-
+	}
 }
 
 
@@ -62,7 +76,29 @@ string calc(string s, int ind_zn) {
 	value_1.append(s, ind_start + 1, ind_zn - ind_start - 2);
 	value_2.append(s, ind_zn + 2, ind_finish - ind_zn - 2);
 
-	string value = to_string(stoi(value_1) ^ stoi(value_2));
+	string value;
+	switch (s[ind_zn])
+	{
+	case '^':
+		value = to_string(stoi(value_1) ^ stoi(value_2));
+		break;
+	case '*':
+		value = to_string(stof(value_1) * stof(value_2));
+		break;
+	case '/':
+		value = to_string(stof(value_1) / stof(value_2));
+		break;
+	case '+':
+		value = to_string(stof(value_1) + stof(value_2));
+		break;
+	case '-':
+		value = to_string(stof(value_1) - stof(value_2));
+		break;
+	default:
+		break;
+	}
+
+	
 	return s.replace(ind_start + 1, ind_finish - ind_start - 1, value);	
 }
 
