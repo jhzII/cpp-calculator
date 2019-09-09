@@ -5,13 +5,6 @@ using namespace std;
 
 // мб постоянная фича - возведение в степень только с преобразованием в целое число 
 
-int main()	{
-	
-	// TODO: создание цикла с условием выхода на определённую клавишу 
-	// TODO: функции подсчета 
-	// TODO: защита от дурака 
-
-}
 
 // функция правильно работает со строкой в формате:
 	// строка начинается с числа, а не с пробела или знака
@@ -19,56 +12,11 @@ int main()	{
 	// перед ) противоположно
 	// знаки разделены пробелами 
 
-string main_calc(string s) { // функция обрабытавает строку со скобками и отдает на подсчет по отдельности без скобок
-	while (int ind_start = s.rfind('(') != -1) {
-		ind_start;
-		int ind_finish = s.find(')', ind_start);
-		string internal_s;
-		internal_s.append(s, ind_start + 1, ind_finish - ind_start - 1);
-		string value = find_calc(internal_s);
-		s.replace(ind_start, ind_finish - ind_start - 1, value);
-	}
-	return find_calc(s);
-
-	/*if (int ind_start = s.find('(') != -1) {
-		int ind_finish = s.rfind(')');
-		string internal_s;
-		internal_s.append(s, ind_start + 1, ind_finish - ind_start - 1);
-
-	}*/
-}
-
-string find_calc(string s) { // функция расчитывает строки без скобок // распределяет по действиям ( + - / * ^)
-	// ^
-	while (int ind_zn = s.find('^') != -1) 
-		s = calc(s, ind_zn);
-
-	// * /
-	while (s.find('*') != -1 || s.find('/') != -1) {
-		int ind_zn;
-		if (s.find('*') < s.find('/') && s.find('*') != -1)
-			ind_zn = s.find('*');
-		else
-			ind_zn = s.find('/');
-		s = calc(s, ind_zn);
-
-	}
-	// + -
-	while (s.find('*') != -1 || s.find('/') != -1) {
-		int ind_zn;
-		if (s.find('*') < s.find('/') && s.find('*') != -1)
-			ind_zn = s.find('*');
-		else
-			ind_zn = s.find('/');
-		s = calc(s, ind_zn);
-
-	}
-}
 
 
 string calc(string s, int ind_zn) {
-	int ind_start = s.rfind(' ', ind_zn);
-	int ind_finish = s.find(' ', ind_zn);
+	int ind_start = s.rfind(' ', ind_zn - 2);
+	int ind_finish = s.find(' ', ind_zn + 2);
 	if (ind_finish == -1)
 		ind_finish = s.length();
 	string value_1;
@@ -98,9 +46,76 @@ string calc(string s, int ind_zn) {
 		break;
 	}
 
-	
-	return s.replace(ind_start + 1, ind_finish - ind_start - 1, value);	
+
+	return s.replace(ind_start + 1, ind_finish - ind_start - 1, value);
 }
+
+string find_calc(string s) { // функция расчитывает строки без скобок // распределяет по действиям ( + - / * ^)
+	// ^
+	while (int ind_zn = s.find('^') != -1)
+		s = calc(s, ind_zn);
+
+	// надо переписать код ниже, сократив расчеты и мб в inline if
+	// * /
+	while (s.find('*') != -1 || s.find('/') != -1) {
+		int ind_zn;
+		if (s.find('*') < s.find('/') && s.find('*') != -1)
+			ind_zn = s.find('*');
+		else
+			ind_zn = s.find('/');
+		s = calc(s, ind_zn);
+
+	}
+	// + -
+	while (s.find('+') != -1 || s.find('-') != -1) {
+		int ind_zn;
+		if (s.find('+') < s.find('-') && s.find('+') != -1)
+			ind_zn = s.find('+');
+		else
+			ind_zn = s.find('-');
+		s = calc(s, ind_zn);
+
+	}
+	return s;
+}
+
+
+string main_calc(string s) { // функция обрабытавает строку со скобками и отдает на подсчет по отдельности без скобок
+	while (s.rfind('(') != -1) {
+		int ind_start = s.rfind('(');
+		int ind_finish = s.find(')', ind_start);
+		string internal_s;
+		internal_s.append(s, ind_start + 1, ind_finish - ind_start - 1);
+		string value = find_calc(internal_s);
+		s.replace(ind_start, ind_finish - ind_start - 1, value);
+	}
+	return find_calc(s);
+
+	/*if (int ind_start = s.find('(') != -1) {
+		int ind_finish = s.rfind(')');
+		string internal_s;
+		internal_s.append(s, ind_start + 1, ind_finish - ind_start - 1);
+
+	}*/
+}
+
+
+int main() {
+
+	// TODO: распределение проекта
+	// TODO: создание цикла с условием выхода на определённую клавишу 
+	// TODO: функции подсчета 
+	// TODO: защита от дурака 
+
+	string s;
+	cout << "Ввод выражения:" << endl;
+	getline(cin, s);
+	cout << "Результат:" << main_calc(s) << endl;
+
+}
+
+
+
 
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
