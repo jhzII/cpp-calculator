@@ -43,6 +43,7 @@ string calc(string s, int ind_zn) {
 		value = to_string(stof(value_1) - stof(value_2));
 		break;
 	default:
+		// error
 		break;
 	}
 
@@ -67,12 +68,12 @@ string find_calc(string s) { // функция расчитывает строк
 
 	}
 	// + -
-	while (s.find('+') != -1 || s.find('-') != -1) {
+	while (s.find('+') != -1 || s.find("- ") != -1) {
 		int ind_zn;
-		if (s.find('+') < s.find('-') && s.find('+') != -1)
+		if (s.find('+') < s.find("- ") && s.find('+') != -1)
 			ind_zn = s.find('+');
 		else
-			ind_zn = s.find('-');
+			ind_zn = s.find("- ");
 		s = calc(s, ind_zn);
 
 	}
@@ -87,7 +88,8 @@ string main_calc(string s) { // функция обрабытавает стро
 		string internal_s;
 		internal_s.append(s, ind_start + 1, ind_finish - ind_start - 1);
 		string value = find_calc(internal_s);
-		s.replace(ind_start, ind_finish - ind_start - 1, value);
+		//s.replace(ind_start, ind_finish - ind_start - 1, value);
+		s.replace(ind_start, ind_finish - ind_start + 1, value);
 	}
 	return find_calc(s);
 
