@@ -13,7 +13,39 @@ using namespace std;
 	// перед ) противоположно
 	// знаки разделены пробелами 
 
+bool char_exist_in_array(char ch, char *arr) {
+	for (int i = 0; i < sizeof(arr); i++) {
+		if (ch == arr[i])
+			return true;
+	}
+	return false;
+}
+
+
 bool check_expression(string s) { // мб это не надо, а просто выкидывать ошибки при парсинге 
+	// Проверка на знаки 
+	char allowed_chars[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+		'.', '(', ')', '/', '*', '^', '+', '-' };
+	for (int i = 0; i < s.length(); i++) {
+		if (char_exist_in_array(s[i], allowed_chars) == false)
+			return false;
+	}
+
+	// Проверка количества скобок
+	int count_open = 0;
+	for (int i = 0; i < s.length(); i++) {
+		if (s[i] == '(')
+			count_open++;
+		else if (s[i] == ')')
+			count_open--;
+		if (count_open < 0)
+			return false;
+	}
+
+	if (count_open != 0)
+		return false;
+	//return count_open == 0;
+	
 	return true;
 	// правильность открывания скобок и их количесво
 	// количество знаков подряд
