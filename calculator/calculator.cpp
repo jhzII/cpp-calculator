@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <string>
+#include <cmath>
 
 using namespace std;
 
@@ -12,6 +13,98 @@ using namespace std;
 	// перед ) противоположно
 	// знаки разделены пробелами 
 
+bool check_expression(string s) { // мб это не надо, а просто выкидывать ошибки при парсинге 
+	return true;
+	// правильность открывания скобок и их количесво
+	// количество знаков подряд
+}
+
+string do_correct_expression(string s) {
+	// удалить лишние пробелы
+	int i = 0;
+	while (i < s.length()) { // == while (true)
+		int ind = s.find(' ', i);
+		if (ind == -1)
+			break;
+		if (ind == s.length() - 1) {
+			s.erase(ind, 1);
+			break;
+		}
+		while (s[ind + 1] == ' ') {
+			s.erase(ind, 1);
+		}
+		i = ind + 1;
+	}
+
+	// доставить нужные
+	char arr[7] = { '(', ')', '^', '*', '/', '+', '-' };
+	// ПРОБЛЕМЫ С МИНУСОМ (КОГДА НУЖНО УКАЗАТЬ ОТРИЦАТЕЛЬНОЕ ЧИСЛО)
+	for (int j = 0; j < 7; j++) {
+		i = 0;
+		while (i < s.length()) { // == while (true)
+			int ind = s.find(arr[j], i);
+			
+			if (ind < 0)
+				break;
+
+			i = ind + 1;
+
+			if (ind == 0) {
+				s.insert(ind, " ");
+				i++;
+				if (s[ind + 2] != ' ') {
+					s.insert(ind + 2, " ");
+					i++;
+				}
+			}
+			
+			if (ind == s.length() - 1) {
+				s.insert(ind + 1, " ");
+				if (s[ind - 1] != ' ') {
+					s.insert(ind, " ");
+					i++;
+				}
+
+			}
+
+			if (s[ind - 1] != ' ') {
+				s.insert(ind, " ");
+				i++;
+				if (s[ind + 2] != ' ') {
+					s.insert(ind + 2, " ");
+					i++;
+				}
+			}
+			else if (s[ind + 1] != ' ') {
+				s.insert(ind + 1, " ");
+				i++;
+			}
+		}
+	}
+
+	i = 0;
+	while (i < s.length()) { // == while (true)
+		int ind = s.find(" - ", i);
+		if (ind == -1)
+			break;
+		i = ind + 3;
+		if (ind == 0) {
+			s.erase(ind + 2, 1);
+			continue;
+		}
+
+		// сюда можно подставить метод поиска элемента в массиве
+		for (int j = 0; j < 7; j++) {
+			if (arr[j] == s[ind - 1]) {
+				s.erase(ind + 2, 1);
+				break;
+			}
+		}
+	}
+
+	
+	return s;
+}
 
 
 string calc(string s, int ind_zn) {
@@ -28,7 +121,7 @@ string calc(string s, int ind_zn) {
 	switch (s[ind_zn])
 	{
 	case '^':
-		value = to_string(stoi(value_1) ^ stoi(value_2));
+		value = to_string(pow(stoi(value_1), stoi(value_2)));
 		break;
 	case '*':
 		value = to_string(stof(value_1) * stof(value_2));
@@ -53,8 +146,11 @@ string calc(string s, int ind_zn) {
 
 string find_calc(string s) { // функция расчитывает строки без скобок // распределяет по действиям ( + - / * ^)
 	// ^
-	while (int ind_zn = s.find('^') != -1)
+	while (s.find('^') != -1) {
+		int ind_zn = s.find('^');
 		s = calc(s, ind_zn);
+	}
+		
 
 	// надо переписать код ниже, сократив расчеты и мб в inline if
 	// * /
@@ -77,11 +173,22 @@ string find_calc(string s) { // функция расчитывает строк
 		s = calc(s, ind_zn);
 
 	}
+
+	if (s[0] == ' ')
+		s.erase(0, 1);
+
+	if (s[s.length() - 1] == ' ')
+		s.erase(s.length() - 1, 1);
+
 	return s;
 }
 
 
 string main_calc(string s) { // функция обрабытавает строку со скобками и отдает на подсчет по отдельности без скобок
+	if (check_expression(s) == false)
+		return "Fail expression";
+	s = do_correct_expression(s);
+
 	while (s.rfind('(') != -1) {
 		int ind_start = s.rfind('(');
 		int ind_finish = s.find(')', ind_start);
@@ -106,13 +213,12 @@ int main() {
 
 	// TODO: распределение проекта
 	// TODO: создание цикла с условием выхода на определённую клавишу 
-	// TODO: функции подсчета 
 	// TODO: защита от дурака 
 
 	string s;
-	cout << "Ввод выражения:" << endl;
+	cout << "Enter :" << endl;
 	getline(cin, s);
-	cout << "Результат:" << main_calc(s) << endl;
+	cout << "Rez:" << main_calc(s) << endl;
 
 }
 
