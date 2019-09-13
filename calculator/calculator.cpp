@@ -13,8 +13,8 @@ using namespace std;
 	// перед ) противоположно
 	// знаки разделены пробелами 
 
-bool char_exist_in_array(char ch, char *arr) {
-	for (int i = 0; i < sizeof(arr); i++) {
+bool char_exist_in_array(char ch, char *arr, int n) {
+	for (int i = 0; i < n; i++) { // SIZEOF работает неправильно
 		if (ch == arr[i])
 			return true;
 	}
@@ -25,9 +25,9 @@ bool char_exist_in_array(char ch, char *arr) {
 bool check_expression(string s) { // мб это не надо, а просто выкидывать ошибки при парсинге 
 	// Проверка на знаки 
 	char allowed_chars[] = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-		'.', '(', ')', '/', '*', '^', '+', '-' };
+		'.', '(', ')', '/', '*', '^', '+', '-', ' ' };
 	for (int i = 0; i < s.length(); i++) {
-		if (char_exist_in_array(s[i], allowed_chars) == false)
+		if (char_exist_in_array(s[i], allowed_chars, 19) == false)
 			return false;
 	}
 
@@ -88,6 +88,7 @@ string do_correct_expression(string s) {
 					s.insert(ind + 2, " ");
 					i++;
 				}
+				continue;
 			}
 			
 			if (ind == s.length() - 1) {
@@ -96,7 +97,7 @@ string do_correct_expression(string s) {
 					s.insert(ind, " ");
 					i++;
 				}
-
+				continue;
 			}
 
 			if (s[ind - 1] != ' ') {
