@@ -1,8 +1,6 @@
 ﻿#include "CalcOfStr.cpp"
 #include <iostream>
 #include <exception>
-#include <string>
-#include <cmath>
 
 using namespace std;
 
@@ -12,12 +10,20 @@ using namespace std;
 int main() {
 
 	string s;
-	cout << "Enter: " << endl;
-	getline(cin, s);
-	try {
-		cout << "Rez: " << CalcOfStr::calc(s) << endl;
-	}
-	catch (exception err) {
+	cout << "( ) ^ * / + -\nPress q to exit" << endl;
+
+	while (true) {
+		cout << "Enter: " << endl;
+		getline(cin, s);
+		
+		if (s == "q")
+			break;
+
+		try {
+			cout << "Rez: " << CalcOfStr::calc(s) << endl;
+		}
+		catch (exception err) {
 			cout << "Rez: " << err.what() << endl;
-	}
+		}
+	}	
 }

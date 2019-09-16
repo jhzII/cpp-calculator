@@ -25,6 +25,13 @@ public:
 			s.replace(ind_start, ind_finish - ind_start + 1, value);
 		}
 		return find_calc(s);
+		
+		/*try {
+			return to_string(stof(s));
+		}
+		catch (exception) {
+			throw exception("Invalid expression!");
+		}*/		
 	}
 
 private:
@@ -199,6 +206,9 @@ private:
 	// ^
 		while (s.find('^') != -1) {
 			int ind_zn = s.find('^');
+			if (ind_zn < 2)
+				throw exception("Invalid expression!");
+
 			s = simple_calc(s, ind_zn);
 		}
 
@@ -211,8 +221,10 @@ private:
 				ind_zn = s.find('*');
 			else
 				ind_zn = s.find('/');
-			s = simple_calc(s, ind_zn);
+			if (ind_zn < 2)
+				throw exception("Invalid expression!");
 
+			s = simple_calc(s, ind_zn);
 		}
 		// + -
 		while (s.find('+') != -1 || s.find("- ") != -1) {
@@ -221,8 +233,10 @@ private:
 				ind_zn = s.find('+');
 			else
 				ind_zn = s.find("- ");
-			s = simple_calc(s, ind_zn);
+			if (ind_zn < 2)
+				throw exception("Invalid expression!");
 
+			s = simple_calc(s, ind_zn);
 		}
 
 		if (s[0] == ' ')
